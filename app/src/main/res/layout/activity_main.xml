@@ -17,8 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="9dp"
         android:text="CONECTAR" />
 
     <ListView
@@ -49,6 +49,18 @@
         android:layout_marginLeft="25dp"
         android:layout_marginTop="12dp"
         tools:text="4552:6589:5485" />
+
+    <Button
+        android:id="@+id/btnDesconectar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="39dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_toStartOf="@+id/btnONOFF"
+        android:layout_toLeftOf="@+id/btnONOFF"
+        android:text="DESCONECTAR" />
 
 
 </RelativeLayout>

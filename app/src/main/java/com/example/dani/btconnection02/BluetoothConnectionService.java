@@ -11,12 +11,9 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.util.UUID;
 
-/**
- * Created by User on 12/21/2016.
- */
+
 
 public class BluetoothConnectionService {
     private static final String TAG = "BluetoothConnectionServ";
@@ -256,7 +253,6 @@ public class BluetoothConnectionService {
                         bytes = mmInStream.read(buffer);
                         String incomingMessage = new String(buffer, 0, bytes);
                         Log.d(TAG, "InputStream: " + incomingMessage);
-
                         //stuck here
                 } catch (IOException e) {
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
@@ -264,17 +260,7 @@ public class BluetoothConnectionService {
                 }
             }
         }
-        /*
-        //Call this from the main activity to send data to the remote device
-        public void write(byte[] bytes) {
-            String text = new String(bytes, Charset.defaultCharset());
-            Log.d(TAG, "write: Writing to outputstream: " + text);
-            try {
-                mmOutStream.write(bytes);
-            } catch (IOException e) {
-                Log.e(TAG, "write: Error writing to output stream. " + e.getMessage() );
-            }
-        }*/
+
 
         /* Call this from the main activity to shutdown the connection */
         public void cancel() {
@@ -292,20 +278,5 @@ public class BluetoothConnectionService {
         mConnectedThread.start();
     }
 
-    /**
-     * Write to the ConnectedThread in an unsynchronized manner
-     *
-     * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
-     */
-    /*public void write(byte[] out) {
-        // Create temporary object
-        ConnectedThread r;
-
-        // Synchronize a copy of the ConnectedThread
-        Log.d(TAG, "write: Write Called.");
-        //perform the write
-        mConnectedThread.write(out);
-    }*/
 
 }
