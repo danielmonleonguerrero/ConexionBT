@@ -33,10 +33,6 @@ public class MainActivity extends AppCompatActivity{
             UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     BluetoothDevice mBTDevice;
 
-    public ArrayList<BluetoothDevice> mBTDevices = new ArrayList<>();
-    public DeviceListAdapter mDeviceListAdapter;
-    ListView lvNewDevices;
-
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -117,19 +113,14 @@ public class MainActivity extends AppCompatActivity{
             if (action.equals(BluetoothDevice.ACTION_FOUND)){
                 Log.d("MyBlueT", "Aparato encontrado");
                 BluetoothDevice device = intent.getParcelableExtra (BluetoothDevice.EXTRA_DEVICE);
-                mBTDevices.add(device);
                 Log.d(TAG, "onReceive: " + device.getName() + ": " + device.getAddress());
                 if(device.getAddress().equals("00:14:03:05:F3:AA")) {
                     Log.d("MyBlueT", "SmartBlood encontrado");
-                    mBluetoothAdapter.cancelDiscovery();
                     mBluetoothAdapter.cancelDiscovery();
                     ID.setText(device.getAddress());
                     mBluetoothConnection = new BluetoothConnectionService(MainActivity.this);
                     mBluetoothConnection.startClient(device,MY_UUID_INSECURE);
                 }
-                mDeviceListAdapter = new DeviceListAdapter(context, R.layout.device_adapter_view, mBTDevices);
-                lvNewDevices.setAdapter(mDeviceListAdapter);
-
             }
         }
     };
@@ -184,8 +175,6 @@ public class MainActivity extends AppCompatActivity{
         Button btnONOFF = (Button) findViewById(R.id.btnONOFF);
         Button btnDesconectar = findViewById(R.id.btnDesconectar);
         ID=findViewById(R.id.ID);
-        lvNewDevices = (ListView) findViewById(R.id.lvNewDevices);
-        mBTDevices = new ArrayList<>();
 
         //Broadcasts when bond state changes (ie:pairing)
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
