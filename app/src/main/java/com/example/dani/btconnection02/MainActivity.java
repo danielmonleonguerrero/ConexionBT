@@ -21,11 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
+    boolean alreadypaired=false;
     BluetoothAdapter mBluetoothAdapter;
     BluetoothConnectionService mBluetoothConnection;
     TextView ID;
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity{
             final String action = intent.getAction();
             Log.d(TAG, "onReceive: ACTION FOUND.");
 
+
             if (action.equals(BluetoothDevice.ACTION_FOUND)){
                 Log.d("MyBlueT", "Aparato encontrado");
                 BluetoothDevice device = intent.getParcelableExtra (BluetoothDevice.EXTRA_DEVICE);
@@ -187,8 +190,11 @@ public class MainActivity extends AppCompatActivity{
             public void onClick(View view) {
                 Log.d(TAG, "onClick: enabling/disabling bluetooth.");
                 EnableBT();
-                discoverDevices();
-
+                if(mBluetoothAdapter.isEnabled()){
+                    Log.d("MyBlueT", "Bluetooth encendido, se procede a conectarse a un dispositivo");
+                    searchpaireddevices();
+                    if(!alreadypaired) discoverDevices();
+                }
             }
         });
 
@@ -198,6 +204,24 @@ public class MainActivity extends AppCompatActivity{
                 DisableBT();
             }
         });
+    }
+
+    private void searchpaireddevices() {
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        Log.d("MyBlueT", "Buscando dispositivos emparejados");
+        if(pairedDevices.size()>0){
+            Log.d("MyBlueT", "Existen dispositivos emparejados");
+            for(BluetoothDevice device : pairedDevices){
+                if(device.getAddress().equals("00:14:03:05:F3:AA")) {
+                    Log.d("MyBlueT", "SmartBlood emparejado anteriormente encontrado");
+                    mBluetoothAdapter.cancelDiscovery();
+                    ID.setText(device.getAddress());
+                    mBluetoothConnection = new BluetoothConnectionService(MainActivity.this);
+                    mBluetoothConnection.startClient(device,MY_UUID_INSECURE);
+                    alreadypaired=true;
+                }
+            }
+        }
     }
 
     private void DisableBT() {
@@ -211,12 +235,10 @@ public class MainActivity extends AppCompatActivity{
 
     public void EnableBT(){
         if(mBluetoothAdapter == null){
-            Log.d(TAG, "enableDisableBT: Does not have BT capabilities.");
+            Log.d("MyBlueT", "EnableBT: Dispositivo no puede usar Bluetooth");
         }
         if(!mBluetoothAdapter.isEnabled()){
-            Log.d(TAG, "enableDisableBT: enabling BT.");
-            Log.d("MyBlueT", "Encendiendo BlueTooth");
-
+            Log.d("MyBlueT", "EnableBT: Se pide al usuario encender BT");
             Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivity(enableBTIntent);
 
